@@ -1,10 +1,10 @@
 package com.hanzoy.nps.controller;
 
 import com.hanzoy.nps.dto.CommonResult;
-import com.hanzoy.nps.dto.param.AddClientParam;
-import com.hanzoy.nps.dto.param.ClientListParam;
-import com.hanzoy.nps.dto.param.DelClientParam;
-import com.hanzoy.nps.dto.param.EditClientParam;
+import com.hanzoy.nps.dto.param.client.AddClientParam;
+import com.hanzoy.nps.dto.param.client.ClientListParam;
+import com.hanzoy.nps.dto.param.client.DelClientParam;
+import com.hanzoy.nps.dto.param.client.EditClientParam;
 import com.hanzoy.nps.service.impl.NPSServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

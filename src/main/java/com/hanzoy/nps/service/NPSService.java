@@ -67,5 +67,14 @@ public interface NPSService {
      */
     CommonResult delTunnel(String id);
 
+    /**
+     * 修改隧道
+     * @param client_id 客户端id
+     * @param id 隧道id
+     * @param remark 备注
+     * @param tunnelPort 隧道端口
+     * @param target 代理目标
+     * @return 请求结果
+     */
     CommonResult editTunnel(String client_id, String id, String remark, String tunnelPort, String target);
 }
