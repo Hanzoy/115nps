@@ -30,7 +30,7 @@ public class CommonResult {
     }
 
     public static CommonResult success(Object data){
-        return new CommonResult("0000", "请求成功", data);
+        return new CommonResult("00000", "请求成功", data);
     }
     public static CommonResult fail(String code, String message, Object data){
         return new CommonResult(code, message, data);
@@ -41,6 +41,6 @@ public class CommonResult {
     }
 
     public static CommonResult fail(Object data){
-        return new CommonResult("1000", "请求失败", data);
+        return new CommonResult("A0001", "请求失败", data);
     }
 }

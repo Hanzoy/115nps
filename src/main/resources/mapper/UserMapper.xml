@@ -10,4 +10,19 @@
           and u.password = #{password};
     </select>
 
+    <insert id="register" useGeneratedKeys="true" keyProperty="id">
+        insert into
+            nps.user(username, password, name, role)
+        values(#{username}, #{password}, #{name} ,1);
+    </insert>
+
+    <select id="searchUsername" resultType="com.hanzoy.nps.domain.User">
+        select * from nps.user
+        where username = #{username};
+    </select>
+
+    <select id="searchRole" resultType="string">
+        select name from nps.role
+        where id = #{id};
+    </select>
 </mapper>

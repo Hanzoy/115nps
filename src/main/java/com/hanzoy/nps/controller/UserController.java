@@ -1,6 +1,7 @@
 package com.hanzoy.nps.controller;
 
 import com.hanzoy.nps.dto.CommonResult;
+import com.hanzoy.nps.dto.param.RegisterParam;
 import com.hanzoy.nps.dto.param.user.LoginParam;
 import com.hanzoy.nps.dto.param.user.TokenLoginParam;
 import com.hanzoy.nps.service.UserService;
@@ -24,5 +25,10 @@ public class UserController {
     @PostMapping("/tokenLogin")
     public CommonResult tokenLogin(@RequestBody TokenLoginParam param){
         return userService.login(param.getToken());
+    }
+
+    @PostMapping("/register")
+    public CommonResult register(@RequestBody RegisterParam param){
+        return userService.register(param.getUsername(), param.getPassword(), param.getName());
     }
 }
