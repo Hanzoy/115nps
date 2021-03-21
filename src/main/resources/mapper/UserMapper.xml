@@ -2,11 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hanzoy.nps.mapper.UserMapper">
 
-    <select id="login" resultType="com.hanzoy.nps.domain.User">
-        select * from nps.user
+    <select id="login" resultType="com.hanzoy.nps.po.LoginPO">
+        select u.name, u.id, r.name AS role from nps.user u left join nps.role r
+        on u.role = r.id
         where
-              user.username = #{username}
-          and user.password = #{password};
+              u.username = #{username}
+          and u.password = #{password};
     </select>
 
 </mapper>
