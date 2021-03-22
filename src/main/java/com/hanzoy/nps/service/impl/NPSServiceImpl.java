@@ -316,12 +316,14 @@ public class NPSServiceImpl implements NPSService {
 
     @Override
     public CommonResult delClient(String id, String token) {
+        //检查token
+        userService.checkToken(token);
 
         if (id == null) {
             return CommonResult.fail(null);
         }
         try {
-
+            //发送请求删除对应id的客户端
             String COOKIE_beegosessionID = getCOOKIE_beegosessionID();
             FormBody formBody = new FormBody.Builder()
                     .add("id", id)
@@ -331,8 +333,10 @@ public class NPSServiceImpl implements NPSService {
                     .addHeader("Cookie", COOKIE_beegosessionID)
                     .post(formBody)
                     .build();
-
             client.newCall(request).execute();
+
+            //本地数据库删除
+            clientMapper.deleteClient(new Integer(id));
 
             return CommonResult.success(null);
         } catch (IOException e) {

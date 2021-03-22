@@ -12,4 +12,5 @@ public interface ClientMapper {
     ArrayList<ClientPO> selectClient(@Param("keyword") String keyword);
     Integer selectClientIdByKey(@Param("key") String key);
     void insertClient(Client client);
+    void deleteClient(Integer id);
 }

@@ -35,4 +35,8 @@
             nps.client(id, creator, remark, `key`)
         VALUES (#{id}, #{creator}, #{remark}, #{key});
     </insert>
+
+    <delete id="deleteClient">
+        delete from nps.client where id = #{id}
+    </delete>
 </mapper>
