@@ -2,7 +2,7 @@ package com.hanzoy.nps.mapper;
 
 
 import com.hanzoy.nps.domain.User;
-import com.hanzoy.nps.po.LoginPO;
+import com.hanzoy.nps.pojo.po.LoginPO;
 
 public interface UserMapper {
     /**

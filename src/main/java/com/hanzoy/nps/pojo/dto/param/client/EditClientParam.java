@@ -1,4 +1,4 @@
-package com.hanzoy.nps.dto.param.client;
+package com.hanzoy.nps.pojo.dto.param.client;
 
 import lombok.Data;
 

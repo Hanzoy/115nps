@@ -1,7 +1,7 @@
 package com.hanzoy.nps.service;
 
-import com.hanzoy.nps.dto.CommonResult;
-import com.hanzoy.nps.dto.npsDto.Clients;
+import com.hanzoy.nps.pojo.dto.CommonResult;
+import com.hanzoy.nps.pojo.dto.npsDto.Clients;
 
 public interface NPSService {
     /**
@@ -30,7 +30,7 @@ public interface NPSService {
      * @param vkey 新增client的key值
      * @return 新增结果
      */
-    CommonResult addClient(String remark, String vkey);
+    CommonResult addClient(String remark, String vkey, String token);
 
     /**
      * 查看某一个client的隧道
@@ -45,7 +45,7 @@ public interface NPSService {
      * @param id client Id
      * @return 返回删除结果
      */
-    CommonResult delClient(String id);
+    CommonResult delClient(String id, String token);
 
     /**
      * 修改某个客户端

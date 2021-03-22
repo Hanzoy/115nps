@@ -1,4 +1,4 @@
-package com.hanzoy.nps.po;
+package com.hanzoy.nps.pojo.po;
 
 import lombok.Data;
 

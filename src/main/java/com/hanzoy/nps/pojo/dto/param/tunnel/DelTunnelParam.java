@@ -1,4 +1,4 @@
-package com.hanzoy.nps.dto.param.tunnel;
+package com.hanzoy.nps.pojo.dto.param.tunnel;
 
 import lombok.Data;
 

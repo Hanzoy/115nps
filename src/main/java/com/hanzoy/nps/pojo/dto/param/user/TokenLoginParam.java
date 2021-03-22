@@ -1,4 +1,4 @@
-package com.hanzoy.nps.dto.param.user;
+package com.hanzoy.nps.pojo.dto.param.user;
 
 import lombok.Data;
 

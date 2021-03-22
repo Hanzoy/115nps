@@ -1,6 +1,7 @@
 package com.hanzoy.nps.service;
 
-import com.hanzoy.nps.dto.CommonResult;
+import com.hanzoy.nps.pojo.bo.TokenBO;
+import com.hanzoy.nps.pojo.dto.CommonResult;
 
 public interface UserService {
     /**
@@ -33,4 +34,11 @@ public interface UserService {
      * @param token 带检查的token
      */
     void checkToken(String token);
+
+    /**
+     * 获取token中的数据
+     * @param token 需要解析的token
+     * @return token储存的数据
+     */
+    TokenBO getTokenInfo(String token);
 }

@@ -1,20 +1,25 @@
 package com.hanzoy.nps.service.impl;
 
 import com.hanzoy.nps.domain.User;
-import com.hanzoy.nps.dto.CommonResult;
+import com.hanzoy.nps.pojo.bo.TokenBO;
+import com.hanzoy.nps.pojo.dto.CommonResult;
 import com.hanzoy.nps.exception.CustomErrorException;
 import com.hanzoy.nps.mapper.UserMapper;
-import com.hanzoy.nps.po.LoginPO;
+import com.hanzoy.nps.pojo.po.LoginPO;
 import com.hanzoy.nps.service.UserService;
 import com.hanzoy.nps.utils.MD5Utils;
 import com.hanzoy.utils.JWTUtils;
+import com.hanzoy.utils.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     @Resource
     UserMapper userMapper;
@@ -84,5 +89,15 @@ public class UserServiceImpl implements UserService {
     public void checkToken(String token){
         if(!jwtUtils.checkToken(token))
             throw new CustomErrorException("A0220", "用户token校验异常");
+    }
+
+    @Override
+    public TokenBO getTokenInfo(String token) {
+        TokenBO tokenBO = new TokenBO();
+        HashMap<String, String> map = (HashMap<String, String>)jwtUtils.getBeanAsMap(token, String.class);
+        tokenBO.setId(new Integer(map.get("id")));
+        tokenBO.setName(map.get("name"));
+        tokenBO.setRole(map.get("role"));
+        return tokenBO;
     }
 }

@@ -1,6 +1,7 @@
 package com.hanzoy.nps.utils.ClassCopyUtils;
 
 import java.lang.reflect.Field;
+import java.util.UUID;
 
 public class ClassCopyUtils {
     public static void ClassCopy(Object dest, Object src){

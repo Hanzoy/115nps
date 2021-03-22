@@ -1,10 +1,9 @@
-package com.hanzoy.nps.dto.param;
+package com.hanzoy.nps.pojo.dto.param.user;
 
 import lombok.Data;
 
 @Data
-public class RegisterParam {
+public class LoginParam {
     private String username;
     private String password;
-    private String name;
 }

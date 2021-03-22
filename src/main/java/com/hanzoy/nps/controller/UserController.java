@@ -1,9 +1,9 @@
 package com.hanzoy.nps.controller;
 
-import com.hanzoy.nps.dto.CommonResult;
-import com.hanzoy.nps.dto.param.RegisterParam;
-import com.hanzoy.nps.dto.param.user.LoginParam;
-import com.hanzoy.nps.dto.param.user.TokenLoginParam;
+import com.hanzoy.nps.pojo.dto.CommonResult;
+import com.hanzoy.nps.pojo.dto.param.RegisterParam;
+import com.hanzoy.nps.pojo.dto.param.user.LoginParam;
+import com.hanzoy.nps.pojo.dto.param.user.TokenLoginParam;
 import com.hanzoy.nps.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

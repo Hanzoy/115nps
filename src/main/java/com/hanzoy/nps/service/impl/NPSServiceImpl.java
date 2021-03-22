@@ -2,14 +2,15 @@ package com.hanzoy.nps.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanzoy.nps.domain.Client;
-import com.hanzoy.nps.dto.CommonResult;
-import com.hanzoy.nps.dto.npsDto.Clients;
+import com.hanzoy.nps.pojo.bo.TokenBO;
+import com.hanzoy.nps.pojo.dto.CommonResult;
+import com.hanzoy.nps.pojo.dto.npsDto.Clients;
 import com.hanzoy.nps.mapper.ClientMapper;
-import com.hanzoy.nps.po.ClientPO;
+import com.hanzoy.nps.pojo.po.ClientPO;
 import com.hanzoy.nps.service.NPSService;
 import com.hanzoy.nps.service.UserService;
 import com.hanzoy.nps.utils.ClassCopyUtils.ClassCopyUtils;
-import com.hanzoy.nps.vo.ClientVO;
+import com.hanzoy.nps.pojo.vo.ClientVO;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,15 +18,14 @@ import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
+@Transactional
 @ConfigurationProperties(prefix = "nps")
 public class NPSServiceImpl implements NPSService {
 
@@ -213,7 +213,9 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
-    public CommonResult addClient(String remark, String vkey){
+    public CommonResult addClient(String remark, String vkey, String token){
+        //检验token
+        userService.checkToken(token);
         try {
             if(vkey == null){
                 vkey = "";
@@ -221,6 +223,18 @@ public class NPSServiceImpl implements NPSService {
             if(remark == null){
                 remark = "";
             }
+
+            if(clientMapper.selectClientIdByKey(vkey) != null)
+                return CommonResult.fail("A0400", "服务端唯一key重复");
+
+            //获取token内容
+            TokenBO tokenInfo = userService.getTokenInfo(token);
+
+            //如果vkey为空则自动生成uuid
+            if(vkey.equals(""))
+                vkey = UUID.randomUUID().toString().replace("-", "");
+
+            //发送请求创建客户端
             String COOKIE_beegosessionID = getCOOKIE_beegosessionID();
             FormBody formBody = new FormBody.Builder()
                     .add("remark", remark)
@@ -235,6 +249,19 @@ public class NPSServiceImpl implements NPSService {
                     .post(formBody)
                     .build();
             client.newCall(request).execute();
+
+            //获取新申请的客户端id
+            Integer id = getClientList(vkey).getRows().get(0).getId();
+
+            //插入数据库的client
+            Client client = new Client();
+            client.setId(id);
+            client.setCreator(tokenInfo.getId());
+            client.setKey(vkey);
+            client.setRemark(remark);
+
+            //插入数据库
+            clientMapper.insertClient(client);
         } catch (IOException e) {
             e.printStackTrace();
             return CommonResult.fail(null);
@@ -288,7 +315,8 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
-    public CommonResult delClient(String id) {
+    public CommonResult delClient(String id, String token) {
+
         if (id == null) {
             return CommonResult.fail(null);
         }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hanzoy.nps.mapper.UserMapper">
 
-    <select id="login" resultType="com.hanzoy.nps.po.LoginPO">
+    <select id="login" resultType="com.hanzoy.nps.pojo.po.LoginPO">
         select u.name, u.id, r.name AS role from nps.user u left join nps.role r
         on u.role = r.id
         where

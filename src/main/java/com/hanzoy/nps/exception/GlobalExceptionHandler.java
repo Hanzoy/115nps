@@ -1,6 +1,6 @@
 package com.hanzoy.nps.exception;
 
-import com.hanzoy.nps.dto.CommonResult;
+import com.hanzoy.nps.pojo.dto.CommonResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

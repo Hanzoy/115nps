@@ -1,10 +1,10 @@
 package com.hanzoy.nps.controller;
 
-import com.hanzoy.nps.dto.CommonResult;
-import com.hanzoy.nps.dto.param.tunnel.AddTunnelParam;
-import com.hanzoy.nps.dto.param.tunnel.DelTunnelParam;
-import com.hanzoy.nps.dto.param.tunnel.EditTunnelParam;
-import com.hanzoy.nps.dto.param.tunnel.GetTunnelParam;
+import com.hanzoy.nps.pojo.dto.CommonResult;
+import com.hanzoy.nps.pojo.dto.param.tunnel.AddTunnelParam;
+import com.hanzoy.nps.pojo.dto.param.tunnel.DelTunnelParam;
+import com.hanzoy.nps.pojo.dto.param.tunnel.EditTunnelParam;
+import com.hanzoy.nps.pojo.dto.param.tunnel.GetTunnelParam;
 import com.hanzoy.nps.service.NPSService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
