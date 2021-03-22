@@ -1,8 +1,7 @@
 package com.hanzoy.nps.service;
 
 import com.hanzoy.nps.dto.CommonResult;
-import okhttp3.FormBody;
-import okhttp3.Request;
+import com.hanzoy.nps.dto.npsDto.Clients;
 
 public interface NPSService {
     /**
@@ -16,8 +15,15 @@ public interface NPSService {
      * @param search 搜索的关键字
      * @return client列表
      */
-    CommonResult getClientList(String search);
+    Clients getClientList(String search);
 
+    /**
+     * 获取client列表
+     * @param search 搜索的关键字
+     * @param token 用户传入的token
+     * @return client列表
+     */
+    CommonResult getClientList(String search, String token);
     /**
      * 新增一个client
      * @param remark 备注

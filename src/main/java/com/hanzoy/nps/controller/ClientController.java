@@ -21,7 +21,7 @@ public class ClientController {
 
     @PostMapping("/list")
     public CommonResult clientList(@RequestBody ClientListParam param){
-        return NPSService.getClientList(param.getSearch());
+        return NPSService.getClientList(param.getSearch(), param.getToken());
     }
 
     @PostMapping("/add")

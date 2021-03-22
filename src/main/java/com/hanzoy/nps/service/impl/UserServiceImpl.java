@@ -2,6 +2,7 @@ package com.hanzoy.nps.service.impl;
 
 import com.hanzoy.nps.domain.User;
 import com.hanzoy.nps.dto.CommonResult;
+import com.hanzoy.nps.exception.CustomErrorException;
 import com.hanzoy.nps.mapper.UserMapper;
 import com.hanzoy.nps.po.LoginPO;
 import com.hanzoy.nps.service.UserService;
@@ -78,5 +79,10 @@ public class UserServiceImpl implements UserService {
         data.put("role", roleName);
         data.put("token", token);
         return CommonResult.success(data);
+    }
+
+    public void checkToken(String token){
+        if(!jwtUtils.checkToken(token))
+            throw new CustomErrorException("A0220", "用户token校验异常");
     }
 }

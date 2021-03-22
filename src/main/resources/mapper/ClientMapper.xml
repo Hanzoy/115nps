@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hanzoy.nps.mapper.ClientMapper">
+
+    <select id="selectAllClient" resultType="com.hanzoy.nps.po.ClientPO">
+        select
+            c.id, u.name AS creator, c.remark, c.`key`
+        from nps.client c left join nps.user u on c.creator = u.id;
+    </select>
+
+    <select id="selectClient" resultType="com.hanzoy.nps.po.ClientPO">
+        select
+            c.id, u.name AS creator, c.remark, c.`key`
+        from nps.client c left join nps.user u on c.creator = u.id
+        where c.`key` like CONCAT('%',#{keyword},'%')
+           or c.remark like CONCAT('%',#{keyword},'%')
+           or c.id like CONCAT('%',#{keyword},'%')
+           or u.name like CONCAT('%',#{keyword},'%');
+    </select>
+
+</mapper>

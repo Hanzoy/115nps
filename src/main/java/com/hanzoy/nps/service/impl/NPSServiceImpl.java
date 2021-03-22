@@ -1,16 +1,24 @@
 package com.hanzoy.nps.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hanzoy.nps.domain.Client;
 import com.hanzoy.nps.dto.CommonResult;
 import com.hanzoy.nps.dto.npsDto.Clients;
+import com.hanzoy.nps.mapper.ClientMapper;
+import com.hanzoy.nps.po.ClientPO;
 import com.hanzoy.nps.service.NPSService;
+import com.hanzoy.nps.service.UserService;
+import com.hanzoy.nps.utils.ClassCopyUtils.ClassCopyUtils;
+import com.hanzoy.nps.vo.ClientVO;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +28,13 @@ import java.util.Objects;
 @Service
 @ConfigurationProperties(prefix = "nps")
 public class NPSServiceImpl implements NPSService {
+
+    @Autowired
+    UserService userService;
+
+    @Resource
+    ClientMapper clientMapper;
+
     private static String COOKIE_beegosessionID;
     private static long date;
 
@@ -63,6 +78,7 @@ public class NPSServiceImpl implements NPSService {
     final OkHttpClient client = new OkHttpClient().newBuilder()
             .build();
 
+    @Override
     public String getCOOKIE_beegosessionID(){
         if(date == 0 || System.currentTimeMillis() - date > 15*60*1000){
             try {
@@ -96,7 +112,8 @@ public class NPSServiceImpl implements NPSService {
         return COOKIE_beegosessionID;
     }
 
-    public CommonResult getClientList(String search) {
+    public Clients getClientList(String search) {
+
         try{
             if(search == null){
                 search = "";
@@ -106,7 +123,7 @@ public class NPSServiceImpl implements NPSService {
                     .add("search", search)
                     .add("order", "asc")
                     .add("offset", "0")
-                    .add("limit", "1000")
+                    .add("limit", "10000")
                     .build();
             Request request = new Request.Builder()
                     .url("http://"+ip+":"+port+"/client/list")
@@ -126,7 +143,7 @@ public class NPSServiceImpl implements NPSService {
             for (Object o : rowsO) {
                 HashMap<String, Object> os = (HashMap<String, Object>) o;
                 Clients.Client client = new Clients.Client();
-                client.setId(os.get("Id").toString());
+                client.setId((Integer) os.get("Id"));
                 client.setVerifyKey(os.get("VerifyKey").toString());
                 client.setAddr(os.get("Addr").toString());
                 client.setRemark(os.get("Remark").toString());
@@ -135,13 +152,67 @@ public class NPSServiceImpl implements NPSService {
                 rows.add(client);
             }
             clients.setRows(rows);
-            return CommonResult.success(clients);
+            return clients;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    @Override
+    public CommonResult getClientList(String search, String token) {
+        //检查token
+        userService.checkToken(token);
+
+        //调取网络接口获取clients
+        Clients clients = getClientList("");
+
+        //获取本地数据库内容
+//        ArrayList<ClientPO> clientPOList = clientMapper.selectAllClient();
+        ArrayList<ClientPO> clientPOList = clientMapper.selectClient(search);
+
+        ClientVO clientVO = new ClientVO();
+        ArrayList<ClientVO.Client> rows = new ArrayList<>();
+/*
+        //将数据拷贝到VO中
+        for (Clients.Client Crow : clients.getRows()) {
+
+            ClientVO.Client row = new ClientVO.Client();
+            ClassCopyUtils.ClassCopy(row, Crow);
+            //遍历寻找creator并添加到VO中
+            for (ClientPO clientPO : clientPOList) {
+                if(clientPO.getId().equals(row.getId())){
+                    row.setCreator(clientPO.getCreator());
+                }
+            }
+            //将拷贝完到row添加至VO中
+            rows.add(row);
+        }
+
+ */
+        //将数据拷贝到VO中
+        for (ClientPO clientPO : clientPOList) {
+            ClientVO.Client row = new ClientVO.Client();
+            ClassCopyUtils.ClassCopy(row, clientPO);
+
+            //遍历寻找creator并添加到VO中
+            for (Clients.Client Crow : clients.getRows()) {
+                if(Crow.getId().equals(row.getId())){
+                    ClassCopyUtils.ClassCopy(row, Crow);
+                    break;
+                }
+            }
+
+            //将拷贝完到row添加至VO中
+            rows.add(row);
+        }
+        //将rows写入rows中
+        clientVO.setRows(rows);
+
+        return CommonResult.success(clientVO);
+    }
+
+    @Override
     public CommonResult addClient(String remark, String vkey){
         try {
             if(vkey == null){
@@ -171,6 +242,7 @@ public class NPSServiceImpl implements NPSService {
         return CommonResult.success(null);
     }
 
+    @Override
     public CommonResult getTunnel(String id, String search) {
         try {
             if(search == null){
