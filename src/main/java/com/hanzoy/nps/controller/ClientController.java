@@ -36,6 +36,6 @@ public class ClientController {
 
     @PostMapping("/edit")
     public CommonResult editClient(@RequestBody EditClientParam param){
-        return npsService.editClient(param.getId(), param.getRemark(), param.getKey());
+        return npsService.editClient(param.getId(), param.getRemark(), param.getKey(), param.getToken());
     }
 }

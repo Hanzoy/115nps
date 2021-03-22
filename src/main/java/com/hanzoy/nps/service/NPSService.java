@@ -28,6 +28,7 @@ public interface NPSService {
      * 新增一个client
      * @param remark 备注
      * @param vkey 新增client的key值
+     * @param token 用户token
      * @return 新增结果
      */
     CommonResult addClient(String remark, String vkey, String token);
@@ -43,6 +44,7 @@ public interface NPSService {
     /**
      * 删除某个客户端
      * @param id client Id
+     * @param token 用户token
      * @return 返回删除结果
      */
     CommonResult delClient(String id, String token);
@@ -52,9 +54,10 @@ public interface NPSService {
      * @param id 客户端id
      * @param remark 修改的备注
      * @param key 修改的密钥
+     * @param token 用户token
      * @return 请求结果
      */
-    CommonResult editClient(String id, String remark, String key);
+    CommonResult editClient(String id, String remark, String key, String token);
 
     /**
      * 新建隧道

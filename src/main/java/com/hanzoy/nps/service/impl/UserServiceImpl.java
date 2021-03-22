@@ -87,6 +87,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public void checkToken(String token){
+        if(token == null)
+            throw new CustomErrorException("A0220", "未识别token");
         if(!jwtUtils.checkToken(token))
             throw new CustomErrorException("A0220", "用户token校验异常");
     }

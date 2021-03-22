@@ -2,6 +2,7 @@ package com.hanzoy.nps.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanzoy.nps.domain.Client;
+import com.hanzoy.nps.pojo.bo.ClientBO;
 import com.hanzoy.nps.pojo.bo.TokenBO;
 import com.hanzoy.nps.pojo.dto.CommonResult;
 import com.hanzoy.nps.pojo.dto.npsDto.Clients;
@@ -346,7 +347,10 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
-    public CommonResult editClient(String id, String remark, String key) {
+    public CommonResult editClient(String id, String remark, String key, String token) {
+        //检查token
+        userService.checkToken(token);
+
         try {
             if(id == null){
                 return CommonResult.fail(null);
@@ -358,6 +362,7 @@ public class NPSServiceImpl implements NPSService {
                 remark = "";
             }
 
+            //发送请求修改客户端
             String COOKIE_beegosessionID = getCOOKIE_beegosessionID();
             FormBody formBody = new FormBody.Builder()
                     .add("id", id)
@@ -373,6 +378,16 @@ public class NPSServiceImpl implements NPSService {
                     .post(formBody)
                     .build();
             client.newCall(request).execute();
+
+            //待更新的client
+            ClientBO clientBO = new ClientBO();
+            clientBO.setId(new Integer(id));
+            clientBO.setRemark(remark);
+            clientBO.setKey(key);
+
+            //更新数据库
+            clientMapper.updateClient(clientBO);
+
         } catch (IOException e) {
             e.printStackTrace();
             return CommonResult.fail(null);

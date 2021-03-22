@@ -18,4 +18,9 @@ public class EditClientParam {
      * 需要修改的密钥
      */
     private String key;
+
+    /**
+     * 用户token
+     */
+    private String token;
 }
