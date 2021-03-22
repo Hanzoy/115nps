@@ -59,15 +59,16 @@ public class UserServiceImpl implements UserService {
             return CommonResult.fail("A0111", "用户名已存在");
 
         //注册账号
-        Integer id = userMapper.register(username, MD5Utils.MD5(password), name);
+        userMapper.register(username, MD5Utils.MD5(password), name);
+        user = userMapper.searchUsername(username);
 
         //获取roleName
         String roleName = userMapper.searchRole(1);
 
         //生成token
-        HashMap<String, String> createToken = new HashMap<>();
-        createToken.put("id", id.toString());
-        createToken.put("name", name);
+        HashMap<String, Object> createToken = new HashMap<>();
+        createToken.put("id", user.getId());
+        createToken.put("name", user.getName());
         createToken.put("role", roleName);
         String token = jwtUtils.createTokenFromMap(createToken);
 
@@ -76,6 +77,6 @@ public class UserServiceImpl implements UserService {
         data.put("name", name);
         data.put("role", roleName);
         data.put("token", token);
-        return CommonResult.success(token);
+        return CommonResult.success(data);
     }
 }
