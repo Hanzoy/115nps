@@ -22,9 +22,7 @@ public class TunnelController {
     NPSService npsService;
 
     @PostMapping("/list")
-    public CommonResult getTunnel(@RequestBody GetTunnelParam param, HttpServletRequest request){
-        String coo = request.getHeader("COO");
-        System.out.println(coo);
+    public CommonResult getTunnel(@RequestBody GetTunnelParam param){
         return npsService.getTunnel(param.getId(), param.getSearch(), param.getToken());
     }
 
