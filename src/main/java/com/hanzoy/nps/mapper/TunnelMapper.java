@@ -23,5 +23,5 @@ public interface TunnelMapper {
 
     TunnelPO selectTunnelByPort(String port);
 
-    void deleteTunnel(String port);
+    void deleteTunnel(String id);
 }

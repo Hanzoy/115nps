@@ -26,4 +26,8 @@
         where
               port = #{port};
     </select>
+
+    <delete id="deleteTunnel">
+        delete from nps.tunnel where id = #{id};
+    </delete>
 </mapper>

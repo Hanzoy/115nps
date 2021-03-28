@@ -506,7 +506,7 @@ public class NPSServiceImpl implements NPSService {
             client.newCall(request).execute();
 
             //本地数据库删除
-
+            tunnelMapper.deleteTunnel(id);
 
             return CommonResult.success(null);
         } catch (IOException e) {
