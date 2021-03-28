@@ -96,6 +96,7 @@ public interface NPSService {
      * @param remark 备注
      * @param tunnelPort 隧道端口
      * @param target 代理目标
+     * @param token 用户token
      * @return 请求结果
      */
     CommonResult editTunnel(String client_id, String id, String remark, String tunnelPort, String target, String token);
