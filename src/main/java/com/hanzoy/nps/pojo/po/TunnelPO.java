@@ -1,18 +1,18 @@
-package com.hanzoy.nps.pojo.dto.param.tunnel;
+package com.hanzoy.nps.pojo.po;
 
 import lombok.Data;
 
 @Data
-public class EditTunnelParam {
+public class TunnelPO {
     /**
-     * 修改的隧道id
+     * 隧道id
      */
-    private String id;
+    private Integer id;
 
     /**
-     * 隧道所属客户端
+     * 创建者
      */
-    private String client_id;
+    private String creator;
 
     /**
      * 备注

@@ -2,12 +2,16 @@ package com.hanzoy.nps.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanzoy.nps.domain.Client;
+import com.hanzoy.nps.mapper.TunnelMapper;
 import com.hanzoy.nps.pojo.bo.ClientBO;
 import com.hanzoy.nps.pojo.bo.TokenBO;
 import com.hanzoy.nps.pojo.dto.CommonResult;
 import com.hanzoy.nps.pojo.dto.npsDto.Clients;
 import com.hanzoy.nps.mapper.ClientMapper;
+import com.hanzoy.nps.pojo.dto.npsDto.Tunnels;
 import com.hanzoy.nps.pojo.po.ClientPO;
+import com.hanzoy.nps.pojo.po.TunnelPO;
+import com.hanzoy.nps.pojo.vo.TunnelVO;
 import com.hanzoy.nps.service.NPSService;
 import com.hanzoy.nps.service.UserService;
 import com.hanzoy.nps.utils.ClassCopyUtils.ClassCopyUtils;
@@ -36,6 +40,8 @@ public class NPSServiceImpl implements NPSService {
     @Resource
     ClientMapper clientMapper;
 
+    @Resource
+    TunnelMapper tunnelMapper;
     private static String COOKIE_beegosessionID;
     private static long date;
 
@@ -271,7 +277,7 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
-    public CommonResult getTunnel(String id, String search) {
+    public Tunnels getTunnel(String id, String search) {
         try {
             if(search == null){
                 search = "";
@@ -294,25 +300,57 @@ public class NPSServiceImpl implements NPSService {
             ObjectMapper objectMapper = new ObjectMapper();
             HashMap<String, Object> gets = objectMapper.readValue(string, HashMap.class);
             ArrayList<Object> rows = (ArrayList<Object>) gets.get("rows");
-            HashMap<String, Object> data = new HashMap<>();
-            ArrayList<HashMap<String, Object>> reRows = new ArrayList<>();
+//            HashMap<String, Object> data = new HashMap<>();
+//            ArrayList<HashMap<String, Object>> reRows = new ArrayList<>();
+            Tunnels tunnels = new Tunnels();
+            ArrayList<Tunnels.Tunnel> tunnelRows = new ArrayList<>();
             for (Object row : rows) {
                 HashMap<String, Object> temp = (HashMap<String, Object>) row;
-                HashMap<String, Object> obj = new HashMap<>();
-                obj.put("tunnelId", temp.get("Id"));
-                obj.put("remark", temp.get("Remark"));
-                obj.put("port", temp.get("Port"));
-                obj.put("status", temp.get("Status"));
-                obj.put("runStatus", temp.get("RunStatus"));
-                obj.put("target", ((HashMap<String, Object>)temp.get("Target")).get("TargetStr"));
-                reRows.add(obj);
+                Tunnels.Tunnel tunnel = new Tunnels.Tunnel();
+                tunnel.setId((Integer) temp.get("Id"));
+                tunnel.setRemark((String) temp.get("Remark"));
+                tunnel.setPort(temp.get("Port").toString());
+                tunnel.setStatus(temp.get("Status").toString());
+                tunnel.setRunStatus(temp.get("RunStatus").toString());
+                tunnel.setTarget(((HashMap<String, String>)temp.get("Target")).get("TargetStr"));
+                tunnelRows.add(tunnel);
             }
-            data.put("rows", reRows);
-            return CommonResult.success(data);
+            tunnels.setRows(tunnelRows);
+            return tunnels;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return CommonResult.fail(null);
+    }
+
+    @Override
+    public CommonResult getTunnel(String id, String search, String token) {
+        //检查token
+        userService.checkToken(token);
+
+        //调取网络接口
+        Tunnels tunnels = getTunnel(id, "");
+
+        //获取本地数据库数据
+        ArrayList<TunnelPO> tunnelPOS = tunnelMapper.selectTunnel(new Integer(id), search);
+
+        TunnelVO tunnelVo = new TunnelVO();
+        ArrayList<TunnelVO.Tunnel> rows = new ArrayList<>();
+
+        //将数据拷贝到VO
+        for (TunnelPO tunnelPO : tunnelPOS) {
+            TunnelVO.Tunnel row = new TunnelVO.Tunnel();
+            ClassCopyUtils.ClassCopy(row, tunnelPO);
+            for (Tunnels.Tunnel tunnelsRow : tunnels.getRows()) {
+                if(tunnelsRow.getId().equals(row.getId())){
+                    ClassCopyUtils.ClassCopy(row, tunnelsRow);
+                }
+            }
+            //将拷贝的row添加至rows中
+            rows.add(row);
+        }
+        tunnelVo.setRows(rows);
+        return CommonResult.success(tunnelVo);
     }
 
     @Override
@@ -396,7 +434,13 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
-    public CommonResult addTunnel(String id, String remark, String tunnelPort, String target) {
+    public CommonResult addTunnel(String id, String remark, String tunnelPort, String target, String token) {
+        userService.checkToken(token);
+
+        TunnelPO tunnelPO = tunnelMapper.selectTunnelByPort(tunnelPort);
+
+        if(tunnelPO != null)
+            return CommonResult.fail("A0400", "申请的端口已被占用");
         try {
             if(id == null || tunnelPort == null || target == null){
                 return CommonResult.fail(null);
@@ -418,6 +462,22 @@ public class NPSServiceImpl implements NPSService {
                     .post(formBody)
                     .build();
             client.newCall(request).execute();
+
+            //获取真实隧道信息
+            Tunnels tunnel = getTunnel(id, tunnelPort);
+
+            System.out.println(tunnel);
+
+            if (tunnel.getRows().size() != 1){
+                tunnel = getTunnel(id, remark);
+            }
+            Tunnels.Tunnel resTunnel = tunnel.getRows().get(0);
+
+            //获取token存储的用户名
+            TokenBO tokenInfo = userService.getTokenInfo(token);
+
+            //插入本地数据库
+            tunnelMapper.insertTunnel(resTunnel.getId(), new Integer(id), tokenInfo.getId(), resTunnel.getRemark(), resTunnel.getPort(), resTunnel.getTarget());
         } catch (IOException e) {
             e.printStackTrace();
             return CommonResult.fail(null);
@@ -426,11 +486,14 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
-    public CommonResult delTunnel(String id) {
+    public CommonResult delTunnel(String id, String token) {
+        //检查token
+        userService.checkToken(token);
         if (id == null) {
             return CommonResult.fail(null);
         }
         try {
+            //发送网络请求
             String COOKIE_beegosessionID = getCOOKIE_beegosessionID();
             FormBody formBody = new FormBody.Builder()
                     .add("id", id)
@@ -440,8 +503,10 @@ public class NPSServiceImpl implements NPSService {
                     .addHeader("Cookie", COOKIE_beegosessionID)
                     .post(formBody)
                     .build();
-
             client.newCall(request).execute();
+
+            //本地数据库删除
+
 
             return CommonResult.success(null);
         } catch (IOException e) {

@@ -41,5 +41,9 @@ public interface ClientMapper {
      */
     void deleteClient(Integer id);
 
+    /**
+     * 更新客户端
+     * @param clientBO 需要更新的客户端
+     */
     void updateClient(ClientBO clientBO);
 }

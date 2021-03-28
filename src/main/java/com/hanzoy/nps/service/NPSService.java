@@ -2,6 +2,7 @@ package com.hanzoy.nps.service;
 
 import com.hanzoy.nps.pojo.dto.CommonResult;
 import com.hanzoy.nps.pojo.dto.npsDto.Clients;
+import com.hanzoy.nps.pojo.dto.npsDto.Tunnels;
 
 public interface NPSService {
     /**
@@ -24,6 +25,7 @@ public interface NPSService {
      * @return client列表
      */
     CommonResult getClientList(String search, String token);
+
     /**
      * 新增一个client
      * @param remark 备注
@@ -39,7 +41,16 @@ public interface NPSService {
      * @param search 搜索的关键字
      * @return 查询结果
      */
-    CommonResult getTunnel(String id, String search);
+    Tunnels getTunnel(String id, String search);
+
+    /**
+     * 查看某一个client的隧道
+     * @param id client Id
+     * @param search 搜索的关键字
+     * @param token 用户token
+     * @return 查询结果
+     */
+    CommonResult getTunnel(String id, String search, String token);
 
     /**
      * 删除某个客户端
@@ -65,16 +76,18 @@ public interface NPSService {
      * @param remark 备注
      * @param tunnelPort 隧道端口
      * @param target 代理目标
+     * @param token 用户token
      * @return 请求结果
      */
-    CommonResult addTunnel(String id, String remark, String tunnelPort, String target);
+    CommonResult addTunnel(String id, String remark, String tunnelPort, String target, String token);
 
     /**
      * 删除隧道
      * @param id 需要删除的隧道id
+     * @param token 用户token
      * @return 删除结果
      */
-    CommonResult delTunnel(String id);
+    CommonResult delTunnel(String id, String token);
 
     /**
      * 修改隧道

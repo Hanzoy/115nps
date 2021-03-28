@@ -20,17 +20,17 @@ public class TunnelController {
 
     @PostMapping("/list")
     public CommonResult getTunnel(@RequestBody GetTunnelParam param){
-        return npsService.getTunnel(param.getId(), param.getSearch());
+        return npsService.getTunnel(param.getId(), param.getSearch(), param.getToken());
     }
 
     @PostMapping("/add")
     public CommonResult addTunnel(@RequestBody AddTunnelParam param){
-        return npsService.addTunnel(param.getId(), param.getRemark(), param.getPort(), param.getTarget());
+        return npsService.addTunnel(param.getId(), param.getRemark(), param.getPort(), param.getTarget(), param.getToken());
     }
 
     @PostMapping("/del")
     public CommonResult delTunnel(@RequestBody DelTunnelParam param){
-        return npsService.delTunnel(param.getId());
+        return npsService.delTunnel(param.getId(), param.getToken());
     }
 
     @PostMapping("/edit")

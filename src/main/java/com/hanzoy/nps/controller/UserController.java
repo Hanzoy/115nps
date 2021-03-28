@@ -1,7 +1,7 @@
 package com.hanzoy.nps.controller;
 
 import com.hanzoy.nps.pojo.dto.CommonResult;
-import com.hanzoy.nps.pojo.dto.param.RegisterParam;
+import com.hanzoy.nps.pojo.dto.param.user.RegisterParam;
 import com.hanzoy.nps.pojo.dto.param.user.LoginParam;
 import com.hanzoy.nps.pojo.dto.param.user.TokenLoginParam;
 import com.hanzoy.nps.service.UserService;

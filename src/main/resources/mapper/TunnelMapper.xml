@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hanzoy.nps.mapper.TunnelMapper">
+
+    <select id="selectTunnel" resultType="com.hanzoy.nps.pojo.po.TunnelPO">
+        select
+               id, creator, remark, port, target
+        from nps.tunnel
+        where
+              client_id = #{id}
+                  and
+              (id like CONCAT('%',#{keyword},'%')
+                or creator like CONCAT('%',#{keyword},'%')
+                or remark like CONCAT('%',#{keyword},'%')
+                or port like CONCAT('%',#{keyword},'%')
+                or target like CONCAT('%',#{keyword},'%'));
+    </select>
+
+    <insert id="insertTunnel">
+        insert into nps.tunnel(id, client_id, creator, remark, port, target)
+        VALUES (#{id}, #{client_id}, #{creator}, #{remark}, #{port}, #{target});
+    </insert>
+
+    <select id="selectTunnelByPort" resultType="com.hanzoy.nps.pojo.po.TunnelPO">
+        select id, creator, remark, port, target from nps.tunnel
+        where
+              port = #{port};
+    </select>
+</mapper>

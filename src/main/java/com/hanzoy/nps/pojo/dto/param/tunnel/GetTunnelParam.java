@@ -13,4 +13,9 @@ public class GetTunnelParam {
      * 查询的关键字
      */
     private String search;
+
+    /**
+     * 用户token
+     */
+    private String token;
 }

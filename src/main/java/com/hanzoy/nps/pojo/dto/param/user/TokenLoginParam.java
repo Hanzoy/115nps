@@ -4,5 +4,8 @@ import lombok.Data;
 
 @Data
 public class TokenLoginParam {
+    /**
+     * 用户token
+     */
     private String token;
 }
