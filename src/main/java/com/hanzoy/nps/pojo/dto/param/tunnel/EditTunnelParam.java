@@ -28,4 +28,9 @@ public class EditTunnelParam {
      * 代理目标
      */
     private String target;
+
+    /**
+     * 用户token
+     */
+    private String token;
 }

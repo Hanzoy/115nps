@@ -516,7 +516,9 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
-    public CommonResult editTunnel(String client_id, String id, String remark, String tunnelPort, String target) {
+    public CommonResult editTunnel(String client_id, String id, String remark, String tunnelPort, String target, String token) {
+        //检查token
+        userService.checkToken(token);
         try {
             if(client_id == null || id == null || tunnelPort == null || target == null){
                 return CommonResult.fail(null);
@@ -524,6 +526,7 @@ public class NPSServiceImpl implements NPSService {
             if(remark == null){
                 remark = "";
             }
+            //发送网络请求
             String COOKIE_beegosessionID = getCOOKIE_beegosessionID();
             FormBody formBody = new FormBody.Builder()
                     .add("id", id)
@@ -539,6 +542,10 @@ public class NPSServiceImpl implements NPSService {
                     .post(formBody)
                     .build();
             client.newCall(request).execute();
+
+            //修改数据库
+            tunnelMapper.updateTunnel(id, remark, target);
+
         } catch (IOException e) {
             e.printStackTrace();
             return CommonResult.fail(null);

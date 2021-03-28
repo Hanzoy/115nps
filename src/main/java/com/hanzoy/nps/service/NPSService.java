@@ -98,5 +98,5 @@ public interface NPSService {
      * @param target 代理目标
      * @return 请求结果
      */
-    CommonResult editTunnel(String client_id, String id, String remark, String tunnelPort, String target);
+    CommonResult editTunnel(String client_id, String id, String remark, String tunnelPort, String target, String token);
 }

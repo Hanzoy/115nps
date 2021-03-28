@@ -30,4 +30,12 @@
     <delete id="deleteTunnel">
         delete from nps.tunnel where id = #{id};
     </delete>
+    
+    <update id="updateTunnel">
+        update nps.tunnel
+        set
+            remark = #{remark},
+            target = #{target}
+        where id = #{id};
+    </update>
 </mapper>

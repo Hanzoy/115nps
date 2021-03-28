@@ -14,6 +14,15 @@ public interface TunnelMapper {
      */
     ArrayList<TunnelPO> selectTunnel(@Param("id") Integer id, @Param("keyword") String keyword);
 
+    /**
+     * 插入数据
+     * @param id 隧道id
+     * @param client_id 客户端id
+     * @param creator
+     * @param remark
+     * @param port
+     * @param target
+     */
     void insertTunnel(@Param("id") Integer id,
                       @Param("client_id") Integer client_id,
                       @Param("creator") Integer creator,
@@ -24,4 +33,6 @@ public interface TunnelMapper {
     TunnelPO selectTunnelByPort(String port);
 
     void deleteTunnel(String id);
+
+    void updateTunnel(@Param("id") String id, @Param("remark") String remark,@Param("target") String target);
 }
