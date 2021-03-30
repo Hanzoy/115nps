@@ -35,7 +35,11 @@
         update nps.tunnel
         set
             remark = #{remark},
-            target = #{target}
-        where id = #{id};
+            target = #{target},
+            port = #{port}
+        where
+              id = #{id}
+          and
+              client_id = #{client_id};
     </update>
 </mapper>

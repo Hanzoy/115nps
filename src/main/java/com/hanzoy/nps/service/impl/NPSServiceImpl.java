@@ -544,7 +544,7 @@ public class NPSServiceImpl implements NPSService {
             client.newCall(request).execute();
 
             //修改数据库
-            tunnelMapper.updateTunnel(id, remark, target);
+            tunnelMapper.updateTunnel(id, remark, target, tunnelPort, client_id);
 
         } catch (IOException e) {
             e.printStackTrace();

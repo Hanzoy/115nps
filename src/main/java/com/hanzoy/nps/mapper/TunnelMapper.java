@@ -49,5 +49,9 @@ public interface TunnelMapper {
      * @param remark 备注
      * @param target 代理目标
      */
-    void updateTunnel(@Param("id") String id, @Param("remark") String remark,@Param("target") String target);
+    void updateTunnel(@Param("id") String id,
+                      @Param("remark") String remark,
+                      @Param("target") String target,
+                      @Param("port") String port,
+                      @Param("client_id") String clientId);
 }
