@@ -3,6 +3,7 @@ package com.hanzoy.nps.mapper;
 
 import com.hanzoy.nps.domain.User;
 import com.hanzoy.nps.pojo.po.LoginPO;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
     /**
@@ -35,4 +36,12 @@ public interface UserMapper {
      * @return role_name
      */
     String searchRole(int id);
+
+    /**
+     * 查询用户权限
+     * @param id 用户id
+     * @param func 权限名称
+     * @return 是否拥有权限
+     */
+    Boolean selectAuth(@Param("id") Integer id, @Param("func") String func);
 }

@@ -1,6 +1,7 @@
 package com.hanzoy.nps.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hanzoy.nps.aop.Function;
 import com.hanzoy.nps.domain.Client;
 import com.hanzoy.nps.mapper.TunnelMapper;
 import com.hanzoy.nps.pojo.bo.ClientBO;
@@ -167,9 +168,9 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
+    @Function("查看客户端")
     public CommonResult getClientList(String search, String token) {
-        //检查token
-        userService.checkToken(token);
+        //token检测已由AOP实现
 
         //调取网络接口获取clients
         Clients clients = getClientList("");
@@ -220,9 +221,10 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
+    @Function("新增客户端")
     public CommonResult addClient(String remark, String vkey, String token){
-        //检验token
-        userService.checkToken(token);
+        //token检测已由AOP实现
+
         try {
             if(vkey == null){
                 vkey = "";
@@ -324,9 +326,9 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
+    @Function("查看隧道")
     public CommonResult getTunnel(String id, String search, String token) {
-        //检查token
-        userService.checkToken(token);
+        //token检测已由AOP实现
 
         //调取网络接口
         Tunnels tunnels = getTunnel(id, "");
@@ -354,9 +356,9 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
+    @Function("删除客户端")
     public CommonResult delClient(String id, String token) {
-        //检查token
-        userService.checkToken(token);
+        //token检测已由AOP实现
 
         if (id == null) {
             return CommonResult.fail(null);
@@ -385,9 +387,9 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
+    @Function("修改客户端")
     public CommonResult editClient(String id, String remark, String key, String token) {
-        //检查token
-        userService.checkToken(token);
+        //token检测已由AOP实现
 
         try {
             if(id == null){
@@ -434,8 +436,9 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
+    @Function("新增隧道")
     public CommonResult addTunnel(String id, String remark, String tunnelPort, String target, String token) {
-        userService.checkToken(token);
+        //token检测已由AOP实现
 
         TunnelPO tunnelPO = tunnelMapper.selectTunnelByPort(tunnelPort);
 
@@ -486,9 +489,10 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
+    @Function("删除隧道")
     public CommonResult delTunnel(String id, String token) {
-        //检查token
-        userService.checkToken(token);
+        //token检测已由AOP实现
+
         if (id == null) {
             return CommonResult.fail(null);
         }
@@ -516,9 +520,10 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
+    @Function("修改隧道")
     public CommonResult editTunnel(String client_id, String id, String remark, String tunnelPort, String target, String token) {
-        //检查token
-        userService.checkToken(token);
+        //token检测已由AOP实现
+
         try {
             if(client_id == null || id == null || tunnelPort == null || target == null){
                 return CommonResult.fail(null);

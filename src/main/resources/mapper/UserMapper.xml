@@ -18,11 +18,28 @@
 
     <select id="searchUsername" resultType="com.hanzoy.nps.domain.User">
         select * from nps.user
-        where username = #{username};
+        where
+              username = #{username};
     </select>
 
     <select id="searchRole" resultType="string">
         select name from nps.role
-        where id = #{id};
+        where
+              id = #{id};
+    </select>
+
+    <select id="selectAuth" resultType="boolean">
+        select have_authority from nps.auth
+        where
+            role = (
+                select user.role from nps.user
+                where
+                    user.id = #{id}
+        )and
+            func = (
+                select id from nps.func
+                where
+                    name = #{func}
+        );
     </select>
 </mapper>

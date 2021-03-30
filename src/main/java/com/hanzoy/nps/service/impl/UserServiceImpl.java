@@ -9,15 +9,15 @@ import com.hanzoy.nps.pojo.po.LoginPO;
 import com.hanzoy.nps.service.UserService;
 import com.hanzoy.nps.utils.MD5Utils;
 import com.hanzoy.utils.JWTUtils;
-import com.hanzoy.utils.Token;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
-import java.util.Map;
 
+@Slf4j
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -87,10 +87,15 @@ public class UserServiceImpl implements UserService {
     }
 
     public void checkToken(String token){
-        if(token == null)
+        if(token == null){
+            log.info("未识别token");
             throw new CustomErrorException("A0220", "未识别token");
-        if(!jwtUtils.checkToken(token))
+        }
+        if(!jwtUtils.checkToken(token)){
+            log.info("用户token校验异常,异常token：{}",token);
             throw new CustomErrorException("A0220", "用户token校验异常");
+        }
+
     }
 
     @Override
