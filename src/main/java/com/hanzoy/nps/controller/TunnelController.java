@@ -7,13 +7,10 @@ import com.hanzoy.nps.pojo.dto.param.tunnel.EditTunnelParam;
 import com.hanzoy.nps.pojo.dto.param.tunnel.GetTunnelParam;
 import com.hanzoy.nps.service.NPSService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/tunnel")
@@ -23,7 +20,7 @@ public class TunnelController {
 
     @PostMapping("/list")
     public CommonResult getTunnel(@RequestBody GetTunnelParam param){
-        return npsService.getTunnel(param.getId(), param.getSearch(), param.getToken());
+        return npsService.getTunnelList(param.getId(), param.getSearch(), param.getToken());
     }
 
     @PostMapping("/add")
@@ -38,6 +35,6 @@ public class TunnelController {
 
     @PostMapping("/edit")
     public CommonResult editTunnel(@RequestBody EditTunnelParam param){
-        return npsService.editTunnel(param.getClient_id(), param.getId(), param.getRemark(), param.getPort(), param.getTarget(), param.getToken());
+        return npsService.editTunnel(param.getId(), param.getClient_id(), param.getRemark(), param.getPort(), param.getTarget(), param.getToken());
     }
 }

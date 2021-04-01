@@ -1,8 +1,10 @@
 package com.hanzoy.nps.aop;
 
+import com.hanzoy.nps.mapper.TunnelMapper;
 import com.hanzoy.nps.mapper.UserMapper;
 import com.hanzoy.nps.pojo.bo.TokenBO;
 import com.hanzoy.nps.pojo.dto.CommonResult;
+import com.hanzoy.nps.pojo.po.TunnelPO;
 import com.hanzoy.nps.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -10,6 +12,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -26,9 +29,21 @@ public class PermissionAOP {
     @Resource
     UserMapper userMapper;
 
+    @Resource
+    TunnelMapper tunnelMapper;
+
     @Pointcut("execution(public com.hanzoy.nps.pojo.dto.CommonResult com.hanzoy.nps.service.NPSService+.*(..))")
     public void checkAuth(){}
 
+    @Pointcut("execution(public com.hanzoy.nps.pojo.dto.CommonResult com.hanzoy.nps.service.NPSService+.*Tunnel(..))")
+    public void checkTunnelAuth(){}
+
+    /**
+     * 根据token进行权限拦截
+     * @param joinPoint 切入点
+     * @return 拦截后业务结果
+     */
+    @Order(0)
     @Around("checkAuth()")
     public CommonResult checkAuth(ProceedingJoinPoint joinPoint){
         //获取请求参数上的token
@@ -50,6 +65,7 @@ public class PermissionAOP {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
+        assert method != null;
         String func = method.getAnnotation(Function.class).value();
 
         //获取token中储存的数据
@@ -71,5 +87,37 @@ public class PermissionAOP {
             throwable.printStackTrace();
         }
         return null;
+    }
+
+    @Order(1)
+    @Around("checkTunnelAuth()")
+    public CommonResult checkTunnelAuth(ProceedingJoinPoint joinPoint){
+        //获取tunnelId和用户token
+        Object[] args = joinPoint.getArgs();
+        String tunnelId = (String) args[0];
+        String token = (String) args[args.length - 1];
+
+        //获取token中的信息
+        TokenBO tokenInfo = userService.getTokenInfo(token);
+
+        boolean permissionAllowed;
+        if(tokenInfo.getRole().equals("管理员")){
+            //管理员可以修改所有隧道
+            permissionAllowed = true;
+        }else{
+            TunnelPO tunnelPO = tunnelMapper.selectTunnelByTunnelAndCreator(tunnelId, tokenInfo.getId().toString());
+            //如果不是该隧道创建者将无法修改隧道
+            permissionAllowed = tunnelPO != null;
+        }
+        if(!permissionAllowed){
+            return CommonResult.fail("A0300", "接口权限不足");
+        }
+        CommonResult proceed = null;
+        try {
+            proceed = (CommonResult) joinPoint.proceed();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return proceed;
     }
 }

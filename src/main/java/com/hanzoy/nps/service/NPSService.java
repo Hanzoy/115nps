@@ -42,7 +42,7 @@ public interface NPSService {
      * @param search 搜索的关键字
      * @return 查询结果
      */
-    Tunnels getTunnel(String id, String search);
+    Tunnels getTunnelList(String id, String search);
 
     /**
      * 查看某一个client的隧道
@@ -51,7 +51,7 @@ public interface NPSService {
      * @param token 用户token
      * @return 查询结果
      */
-    CommonResult getTunnel(String id, String search, String token);
+    CommonResult getTunnelList(String id, String search, String token);
 
     /**
      * 删除某个客户端
@@ -73,7 +73,7 @@ public interface NPSService {
 
     /**
      * 新建隧道
-     * @param id 客户端ID
+     * @param id 客户端id
      * @param remark 备注
      * @param tunnelPort 隧道端口
      * @param target 代理目标
@@ -92,13 +92,13 @@ public interface NPSService {
 
     /**
      * 修改隧道
-     * @param client_id 客户端id
      * @param id 隧道id
+     * @param client_id 客户端id
      * @param remark 备注
      * @param tunnelPort 隧道端口
      * @param target 代理目标
      * @param token 用户token
      * @return 请求结果
      */
-    CommonResult editTunnel(String client_id, String id, String remark, String tunnelPort, String target, String token);
+    CommonResult editTunnel(String id, String client_id, String remark, String tunnelPort, String target, String token);
 }

@@ -279,7 +279,7 @@ public class NPSServiceImpl implements NPSService {
     }
 
     @Override
-    public Tunnels getTunnel(String id, String search) {
+    public Tunnels getTunnelList(String id, String search) {
         try {
             if(search == null){
                 search = "";
@@ -327,11 +327,11 @@ public class NPSServiceImpl implements NPSService {
 
     @Override
     @Function("查看隧道")
-    public CommonResult getTunnel(String id, String search, String token) {
+    public CommonResult getTunnelList(String id, String search, String token) {
         //token检测已由AOP实现
 
         //调取网络接口
-        Tunnels tunnels = getTunnel(id, "");
+        Tunnels tunnels = getTunnelList(id, "");
 
         //获取本地数据库数据
         ArrayList<TunnelPO> tunnelPOS = tunnelMapper.selectTunnel(new Integer(id), search);
@@ -467,12 +467,12 @@ public class NPSServiceImpl implements NPSService {
             client.newCall(request).execute();
 
             //获取真实隧道信息
-            Tunnels tunnel = getTunnel(id, tunnelPort);
+            Tunnels tunnel = getTunnelList(id, tunnelPort);
 
             System.out.println(tunnel);
 
             if (tunnel.getRows().size() != 1){
-                tunnel = getTunnel(id, remark);
+                tunnel = getTunnelList(id, remark);
             }
             Tunnels.Tunnel resTunnel = tunnel.getRows().get(0);
 
@@ -521,7 +521,7 @@ public class NPSServiceImpl implements NPSService {
 
     @Override
     @Function("修改隧道")
-    public CommonResult editTunnel(String client_id, String id, String remark, String tunnelPort, String target, String token) {
+    public CommonResult editTunnel(String id, String client_id, String remark, String tunnelPort, String target, String token) {
         //token检测已由AOP实现
 
         try {

@@ -54,4 +54,7 @@ public interface TunnelMapper {
                       @Param("target") String target,
                       @Param("port") String port,
                       @Param("client_id") String clientId);
+
+    TunnelPO selectTunnelByTunnelAndCreator(@Param("id") String tunnelId,
+                                            @Param("creator") String creator);
 }

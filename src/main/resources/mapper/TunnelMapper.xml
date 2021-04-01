@@ -4,16 +4,16 @@
 
     <select id="selectTunnel" resultType="com.hanzoy.nps.pojo.po.TunnelPO">
         select
-               id, creator, remark, port, target
-        from nps.tunnel
+               t.id, u.name as creator, t.remark, t.port, t.target
+        from nps.tunnel t left join nps.user AS u on t.creator = u.id
         where
-              client_id = #{id}
+              t.client_id = #{id}
                   and
-              (id like CONCAT('%',#{keyword},'%')
-                or creator like CONCAT('%',#{keyword},'%')
-                or remark like CONCAT('%',#{keyword},'%')
-                or port like CONCAT('%',#{keyword},'%')
-                or target like CONCAT('%',#{keyword},'%'));
+              (t.id like CONCAT('%',#{keyword},'%')
+                or u.name like CONCAT('%',#{keyword},'%')
+                or t.remark like CONCAT('%',#{keyword},'%')
+                or t.port like CONCAT('%',#{keyword},'%')
+                or t.target like CONCAT('%',#{keyword},'%'));
     </select>
 
     <insert id="insertTunnel">
@@ -42,4 +42,12 @@
           and
               client_id = #{client_id};
     </update>
+
+    <select id="selectTunnelByTunnelAndCreator" resultType="com.hanzoy.nps.pojo.po.TunnelPO">
+        select  id, creator, remark, port, target from nps.tunnel
+        where
+              id = #{id}
+          and
+              creator = #{creator};
+    </select>
 </mapper>
