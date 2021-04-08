@@ -41,4 +41,13 @@ public interface UserService {
      * @return token储存的数据
      */
     TokenBO getTokenInfo(String token);
+
+    /**
+     * 修改密码
+     * @param token 用户token
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     * @return 请求结果
+     */
+    CommonResult changePassword(String oldPassword, String newPassword, String token);
 }

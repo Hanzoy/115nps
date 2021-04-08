@@ -35,7 +35,7 @@ public interface UserMapper {
      * @param id role_id
      * @return role_name
      */
-    String searchRole(int id);
+    String searchRole(Integer id);
 
     /**
      * 查询用户权限
@@ -44,4 +44,18 @@ public interface UserMapper {
      * @return 是否拥有权限
      */
     Boolean selectAuth(@Param("id") Integer id, @Param("func") String func);
+
+    /**
+     * 通过id查询user
+     * @param id 用户id
+     * @return 查询结果
+     */
+    User selectUserById(Integer id);
+
+    /**
+     * 修改密码
+     * @param password 需要修改到密码
+     * @param id 用户id（通过token获取）
+     */
+    void changePassword(String password, Integer id);
 }

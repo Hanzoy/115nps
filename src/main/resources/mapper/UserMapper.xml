@@ -42,4 +42,18 @@
                     name = #{func}
         );
     </select>
+
+    <select id="selectUserById" resultType="com.hanzoy.nps.domain.User">
+        select * from nps.user
+        where
+              id = #{id};
+    </select>
+
+    <update id="changePassword">
+        update nps.user
+        set
+            password = #{password}
+        where
+              id = #{id};
+    </update>
 </mapper>

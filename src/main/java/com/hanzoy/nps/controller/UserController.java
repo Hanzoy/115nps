@@ -1,6 +1,7 @@
 package com.hanzoy.nps.controller;
 
 import com.hanzoy.nps.pojo.dto.CommonResult;
+import com.hanzoy.nps.pojo.dto.param.user.ChangePasswordParam;
 import com.hanzoy.nps.pojo.dto.param.user.RegisterParam;
 import com.hanzoy.nps.pojo.dto.param.user.LoginParam;
 import com.hanzoy.nps.pojo.dto.param.user.TokenLoginParam;
@@ -30,5 +31,10 @@ public class UserController {
     @PostMapping("/register")
     public CommonResult register(@RequestBody RegisterParam param){
         return userService.register(param.getUsername(), param.getPassword(), param.getName());
+    }
+
+    @PostMapping("/changePassword")
+    public CommonResult changePassword(@RequestBody ChangePasswordParam param){
+        return userService.changePassword(param.getOldPassword(), param.getNewPassword(), param.getToken());
     }
 }

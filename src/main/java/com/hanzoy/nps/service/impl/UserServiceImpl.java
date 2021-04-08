@@ -107,4 +107,23 @@ public class UserServiceImpl implements UserService {
         tokenBO.setRole(map.get("role"));
         return tokenBO;
     }
+
+    @Override
+    public CommonResult changePassword(String oldPassword, String newPassword, String token) {
+        //检查token
+        checkToken(token);
+
+        //通过token查询到user
+        User user = userMapper.selectUserById(getTokenInfo(token).getId());
+
+        //验证旧密码
+        LoginPO login = userMapper.login(user.getUsername(), MD5Utils.MD5(oldPassword));
+        if(login == null){
+            return CommonResult.fail("A0120", "密码错误");
+        }
+
+        //重制密码
+        userMapper.changePassword(MD5Utils.MD5(newPassword), user.getId());
+        return CommonResult.success(null);
+    }
 }
